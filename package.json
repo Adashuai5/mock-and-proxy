@@ -12,9 +12,7 @@
     "Other"
   ],
   "activationEvents": [
-    "workspaceContains:**/.editorconfig",
-    "workspaceContains:**/mockProxy.config.json",
-    "onView:mockProxy",
+    "workspaceContains:.editorconfig",
     "onCommand:mockProxy.startMock"
   ],
   "main": "./dist/extension.js",
@@ -46,7 +44,7 @@
           },
           "mockProxy.proxy.configPath": {
             "type": "string",
-            "default": "${workspaceFolder}/mockProxy.config.json",
+            "default": "${workspaceFolder}/mockAndProxy.config.json",
             "description": "Mock And Proxy 的配置文件"
           },
           "mockProxy.mock.startWith": {
@@ -74,6 +72,8 @@
   "devDependencies": {
     "@types/glob": "^7.1.3",
     "@types/koa": "^2.13.1",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-proxies": "^0.9.0",
     "@types/mocha": "^8.0.4",
     "@types/node": "^12.11.7",
     "@types/vscode": "^1.56.0",
@@ -81,6 +81,8 @@
     "@typescript-eslint/parser": "^4.14.1",
     "eslint": "^7.19.0",
     "glob": "^7.1.6",
+    "koa-bodyparser": "^4.3.0",
+    "koa-proxies": "^0.12.1",
     "mocha": "^8.2.1",
     "ts-loader": "^8.0.14",
     "typescript": "^4.1.3",

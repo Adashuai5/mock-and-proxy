@@ -1,21 +1,7 @@
 import * as vscode from 'vscode'
 import * as apiServer from './Server'
-
-const statusBarItem = vscode.window.createStatusBarItem(
-  vscode.StatusBarAlignment.Right,
-  100
-)
-export const updateStatusBar = (text?: string, command?: string) => {
-  if (command !== undefined) {
-    statusBarItem.command = command
-  }
-  if (text) {
-    statusBarItem.text = `mock:${text}`
-    statusBarItem.show()
-  } else {
-    statusBarItem.hide()
-  }
-}
+import { updateStatusBar } from './StatusBar'
+import { switchProxy } from './SwitchProxy'
 
 export const runServer = () => {
   vscode.window.setStatusBarMessage(
@@ -26,9 +12,12 @@ export const runServer = () => {
         try {
           await apiServer.runMockServer()
           const commands = await vscode.commands.getCommands(true)
-          const commandId = 'vscodeMock.switchProxy'
+          const commandId = 'mockProxy.switchProxy'
           if (!commands.includes(commandId)) {
-            vscode.commands.registerCommand(commandId, () => {})
+            vscode.commands.registerCommand(
+              commandId,
+              switchProxy
+            )
           }
           updateStatusBar('mock', commandId)
         } catch (error) {

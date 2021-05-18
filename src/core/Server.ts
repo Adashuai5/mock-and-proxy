@@ -3,18 +3,20 @@ import * as url from 'url'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { getConfiguration } from './Configuration'
-import Koa, { Context, Next } from 'koa'
 import { compatibleWithPath } from '../core/Path'
+import Koa, { Context, Next } from 'koa'
+import proxy, { IBaseKoaProxiesOptions } from 'koa-proxies'
+import bodyparser from 'koa-bodyparser'
+import { Server } from 'http'
 
-const app = new Koa()
-
+let server: Server
 export const getPort = () => {
   const { port } = getConfiguration('mock')
   const configPath = getConfiguration('proxy.configPath')
   let _port = port
 
   if (fs.existsSync(configPath)) {
-    const configData = require(configPath)
+    const configData = JSON.parse(fs.readFileSync(configPath, 'utf8'))
     _port = configData.port || _port
   }
 
@@ -73,13 +75,15 @@ export const getResponse = async (ctx: Context, next: Next) => {
 
 export const runMockServer = async () => {
   try {
+    server?.close()
+    const app = new Koa()
     const port = getPort()
 
     app.use(getResponse)
 
-    const success = app.listen(port)
+    server = app.listen(port)
 
-    if (success.listening) {
+    if (server.listening) {
       return Promise.resolve({ port })
     } else {
       return Promise.reject(new Error('服务启动失败'))
@@ -87,4 +91,54 @@ export const runMockServer = async () => {
   } catch (error) {
     return Promise.reject(error)
   }
+}
+
+export const setupProxy = async (config: IBaseKoaProxiesOptions | string) => {
+  server?.close()
+  const app = new Koa()
+
+  vscode.window.showInformationMessage(
+    `mergeProxyConfig(config):${JSON.stringify(mergeProxyConfig(config))}`
+  )
+
+  app.use(proxy('*', mergeProxyConfig(config)))
+
+  app.use(
+    bodyparser({
+      enableTypes: ['json', 'form', 'text'],
+    })
+  )
+
+  const port = getPort()
+  server = app.listen(port)
+}
+
+// 代理的默认配置项
+const DEFAULT_PROXY_OPTIONS = {
+  changeOrigin: true,
+}
+
+/**
+ * 统一转换格式
+ * 可能存在以下几种格式
+ * 1. 纯字符串： http://www.baidu.com
+ * 2. target 已经是可用的对象
+ */
+export const mergeProxyConfig = (
+  config: string | IBaseKoaProxiesOptions
+): IBaseKoaProxiesOptions => {
+  let conf: IBaseKoaProxiesOptions
+  if (typeof config === 'string') {
+    conf = {
+      ...DEFAULT_PROXY_OPTIONS,
+      target: config,
+    }
+  } else {
+    conf = {
+      ...DEFAULT_PROXY_OPTIONS,
+      target: config.target,
+    }
+  }
+
+  return conf
 }
