@@ -62,6 +62,12 @@ export const getResponse = async (ctx: Context, next: Next) => {
   if (isLocalExist) {
     ctx.response.body = fs.readFileSync(apiPath, 'utf8')
   } else {
+    const apiDir = path.dirname(apiPath)
+
+    if (!fs.existsSync(apiDir)) {
+      fs.mkdirSync(apiDir, { recursive: true })
+    }
+
     fs.writeFileSync(
       apiPath,
       JSON.stringify({ code: '000000', success: true, data: null })
