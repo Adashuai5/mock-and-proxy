@@ -66,7 +66,7 @@ export const switchProxy = async () => {
         return
       }
       setupProxy(value)
-      updateStatusBar(value)
+      updateStatusBar(value, 'proxy')
       break
     }
     // 使用 mock
@@ -77,7 +77,7 @@ export const switchProxy = async () => {
     // 切换 proxy
     default:
       setupProxy(target.target)
-      updateStatusBar(getNameFromProxyConfig(target.target))
+      updateStatusBar(getNameFromProxyConfig(target.target), 'proxy')
   }
 }
 

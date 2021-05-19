@@ -103,10 +103,6 @@ export const setupProxy = async (config: IBaseKoaProxiesOptions | string) => {
   server?.close()
   const app = new Koa()
 
-  vscode.window.showInformationMessage(
-    `mergeProxyConfig(config):${JSON.stringify(mergeProxyConfig(config))}`
-  )
-
   app.use(proxy('*', mergeProxyConfig(config)))
 
   app.use(
