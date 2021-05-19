@@ -1,15 +1,16 @@
 import * as fs from 'fs'
 import * as url from 'url'
 import * as path from 'path'
-import * as vscode from 'vscode'
 import { getConfiguration } from './Configuration'
-import { compatibleWithPath } from '../core/Path'
+import { compatibleWithPath } from '../utils/path'
+import { mergeProxyConfig } from '../utils/config'
 import Koa, { Context, Next } from 'koa'
 import proxy, { IBaseKoaProxiesOptions } from 'koa-proxies'
 import bodyparser from 'koa-bodyparser'
 import { Server } from 'http'
 
 let server: Server
+
 export const getPort = () => {
   const { port } = getConfiguration('mock')
   const configPath = getConfiguration('proxy.configPath')
@@ -37,8 +38,8 @@ export const getResponse = async (ctx: Context, next: Next) => {
   }
 
   const pathname = url.parse(ctx.request.url).pathname
-
   const startWith = getConfiguration('mock.startWith')
+
   if (
     pathname &&
     startWith.length &&
@@ -57,9 +58,8 @@ export const getResponse = async (ctx: Context, next: Next) => {
   const apiPath = compatibleWithPath(path.join(rootDir, pathname + '.json'))
   const isLocalExist = fs.existsSync(apiPath)
 
-  ctx.response.status = 200
-
   if (isLocalExist) {
+    ctx.response.status = 200
     ctx.response.body = fs.readFileSync(apiPath, 'utf8')
   } else {
     const apiDir = path.dirname(apiPath)
@@ -73,6 +73,7 @@ export const getResponse = async (ctx: Context, next: Next) => {
       JSON.stringify({ code: '000000', success: true, data: null })
     )
 
+    ctx.response.status = 200
     ctx.response.body = fs.readFileSync(apiPath, 'utf8')
   }
 
@@ -113,34 +114,4 @@ export const setupProxy = async (config: IBaseKoaProxiesOptions | string) => {
 
   const port = getPort()
   server = app.listen(port)
-}
-
-// 代理的默认配置项
-const DEFAULT_PROXY_OPTIONS = {
-  changeOrigin: true,
-}
-
-/**
- * 统一转换格式
- * 可能存在以下几种格式
- * 1. 纯字符串： http://www.baidu.com
- * 2. target 已经是可用的对象
- */
-export const mergeProxyConfig = (
-  config: string | IBaseKoaProxiesOptions
-): IBaseKoaProxiesOptions => {
-  let conf: IBaseKoaProxiesOptions
-  if (typeof config === 'string') {
-    conf = {
-      ...DEFAULT_PROXY_OPTIONS,
-      target: config,
-    }
-  } else {
-    conf = {
-      ...DEFAULT_PROXY_OPTIONS,
-      target: config.target,
-    }
-  }
-
-  return conf
 }

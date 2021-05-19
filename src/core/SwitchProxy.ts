@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import * as fs from 'fs'
-import * as url from 'url'
 import * as vscode from 'vscode'
 import { getConfiguration } from './Configuration'
 import { updateStatusBar } from './StatusBar'
-import { mergeProxyConfig } from './Server'
+import { mergeProxyConfig, getNameFromProxyConfig } from '../utils/config'
 import { setupProxy, runMockServer } from './Server'
 
 // 切换代理时的可用操作
@@ -78,41 +78,5 @@ export const switchProxy = async () => {
     default:
       setupProxy(target.target)
       updateStatusBar(getNameFromProxyConfig(target.target), 'proxy')
-  }
-}
-
-export type ServerOptions =
-  | {
-      target: string
-    }
-  | {
-      target: {
-        name: string
-        target: string
-      }
-    }
-
-/**
- * 解析配置文件中的目标地址
- * 存在以下几种格式
- * 1. {
- *      target: 'https://domain'
- *    }
- * 2. {
- *      target:  {
- *        name: 'xxx',
- *        target: 'https://domain',
- *      }
- *    }
- */
-const getNameFromProxyConfig = (config: ServerOptions | any): string => {
-  if (config.name) {
-    return config.name
-  }
-
-  if (typeof config.target === 'string') {
-    return config.target
-  } else {
-    return url.format(config.target)
   }
 }

@@ -4,6 +4,7 @@ const statusBarItem = vscode.window.createStatusBarItem(
   vscode.StatusBarAlignment.Right,
   100
 )
+
 export const updateStatusBar = (
   text?: string,
   title?: string,
