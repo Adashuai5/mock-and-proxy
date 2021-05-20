@@ -2,9 +2,10 @@
   "name": "mock-and-proxy",
   "displayName": "Mock And Proxy",
   "description": "mock or proxy a server",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT License",
   "publisher": "Adashuai5",
+  "icon": "logo.png",
   "engines": {
     "vscode": "^1.56.0"
   },

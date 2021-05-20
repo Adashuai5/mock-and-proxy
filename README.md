@@ -1,8 +1,16 @@
 # Mock And Proxy
 
-开启 mock 服务或代理服务
+Open a mock or proxy service and switch freely
 
-# mockAndProxy.config.json 示例
+# Use
+
+1. use command
+   command+shift+P then input "Start Mock"
+
+2. use config file
+   Create a new mockAndProxy.config.json configuration file with the following example and restart the window to start the service automatically or use the command to start the service
+
+# mockAndProxy.config.json example
 
 ```
 {

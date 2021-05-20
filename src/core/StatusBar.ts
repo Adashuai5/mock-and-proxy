@@ -5,19 +5,12 @@ const statusBarItem = vscode.window.createStatusBarItem(
   100
 )
 
-export const updateStatusBar = (
-  text?: string,
-  title?: string,
-  command?: string
-) => {
+export const updateStatusBar = (text?: string, command?: string) => {
   if (command !== undefined) {
     statusBarItem.command = command
   }
-  if (!title) {
-    title = 'mock'
-  }
   if (text) {
-    statusBarItem.text = `${title}:${text}`
+    statusBarItem.text = `${text}`
     statusBarItem.show()
   } else {
     statusBarItem.hide()

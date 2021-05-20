@@ -16,7 +16,7 @@ export const runServer = () => {
           if (!commands.includes(commandId)) {
             vscode.commands.registerCommand(commandId, switchProxy)
           }
-          updateStatusBar('mock', 'mock', commandId)
+          updateStatusBar('Mock', commandId)
         } catch (error) {
           vscode.window.showErrorMessage(`${error}`)
         }

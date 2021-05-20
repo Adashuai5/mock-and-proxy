@@ -66,17 +66,17 @@ export const switchProxy = async () => {
         return
       }
       setupProxy(value)
-      updateStatusBar(value, 'proxy')
+      updateStatusBar(value)
       break
     }
     // 使用 mock
     case ACTION_ENUM.mock:
       runMockServer()
-      updateStatusBar('mock')
+      updateStatusBar('Mock')
       break
     // 切换 proxy
     default:
       setupProxy(target.target)
-      updateStatusBar(getNameFromProxyConfig(target.target), 'proxy')
+      updateStatusBar(getNameFromProxyConfig(target.target))
   }
 }
