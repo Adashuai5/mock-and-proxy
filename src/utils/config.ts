@@ -24,7 +24,7 @@ export const mergeProxyConfig = (
   } else {
     conf = {
       ...DEFAULT_PROXY_OPTIONS,
-      target: config.target,
+      ...config,
     }
   }
 

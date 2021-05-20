@@ -12,7 +12,7 @@
     "Other"
   ],
   "activationEvents": [
-    "workspaceContains:.editorconfig",
+    "workspaceContains:mockAndProxy.config.json",
     "onCommand:mockProxy.startMock"
   ],
   "main": "./dist/extension.js",
