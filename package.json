@@ -2,7 +2,7 @@
   "name": "mock-and-proxy",
   "displayName": "Mock And Proxy",
   "description": "mock or proxy a server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT License",
   "publisher": "Adashuai5",
   "icon": "logo.png",

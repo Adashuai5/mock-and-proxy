@@ -1,14 +1,16 @@
 # Mock And Proxy
 
-Open a mock or proxy service and switch freely
+Open a mock or proxy service and switch freely.
 
-# Use
+# Usage
 
-1. use command
-   command+shift+P then input "Start Mock"
+1. using command
 
-2. use config file
-   Create a new mockAndProxy.config.json configuration file with the following example and restart the window to start the service automatically or use the command to start the service
+   command+shift+P then input "Start Mock".
+
+2. using config file
+
+   Create a configuration file named mockAndProxy.config.json with the following example then "Reload Window" to start the service automatically or use the command.
 
 # mockAndProxy.config.json example
 
