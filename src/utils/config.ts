@@ -1,5 +1,5 @@
 import * as url from 'url'
-import { IBaseKoaProxiesOptions } from 'koa-proxies'
+import { ConfigOptions } from './types'
 
 // 代理的默认配置项
 const DEFAULT_PROXY_OPTIONS = {
@@ -13,9 +13,9 @@ const DEFAULT_PROXY_OPTIONS = {
  * 2. target 已经是可用的对象
  */
 export const mergeProxyConfig = (
-  config: string | IBaseKoaProxiesOptions
-): IBaseKoaProxiesOptions => {
-  let conf: IBaseKoaProxiesOptions
+  config: string | ConfigOptions
+): ConfigOptions => {
+  let conf: ConfigOptions
   if (typeof config === 'string') {
     conf = {
       ...DEFAULT_PROXY_OPTIONS,
@@ -45,7 +45,7 @@ export const mergeProxyConfig = (
  *    }
  */
 export const getNameFromProxyConfig = (
-  config: IBaseKoaProxiesOptions | any
+  config: ConfigOptions
 ): string => {
   if (config.name) {
     return config.name

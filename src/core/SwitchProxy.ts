@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import * as fs from 'fs'
 import * as vscode from 'vscode'
 import { getConfiguration } from './Configuration'
@@ -7,6 +6,7 @@ import { mergeProxyConfig, getNameFromProxyConfig } from '../utils/config'
 import { setupProxy, runMockServer } from './Server'
 
 // 切换代理时的可用操作
+// eslint-disable-next-line @typescript-eslint/naming-convention
 enum ACTION_ENUM {
   // 自定义配置
   custom,
@@ -34,29 +34,29 @@ export const switchProxy = async () => {
 
   targets = targets.map(mergeProxyConfig)
 
-  const target = await vscode.window.showQuickPick(
+  const quickPick = await vscode.window.showQuickPick(
     [
       {
         label: '自定义',
         description: '使用自定义的 protocol//ip:port',
-        target: ACTION_ENUM.custom,
+        config: ACTION_ENUM.custom,
       },
-      { label: 'Mock', description: mockRootDir, target: ACTION_ENUM.mock },
+      { label: 'Mock', description: mockRootDir, config: ACTION_ENUM.mock },
       ...targets.map((config: any) => {
         return {
           label: getNameFromProxyConfig(config),
           description: config.target,
-          target: config,
+          config,
         }
       }),
     ],
     { placeHolder: '选择代理目标' }
   )
-  if (!target) {
+  if (!quickPick) {
     return
   }
 
-  switch (target.target) {
+  switch (quickPick.config) {
     // 使用自定义配置
     case ACTION_ENUM.custom: {
       const value = await vscode.window.showInputBox({
@@ -76,7 +76,7 @@ export const switchProxy = async () => {
       break
     // 切换 proxy
     default:
-      setupProxy(target.target)
-      updateStatusBar(getNameFromProxyConfig(target.target))
+      setupProxy(quickPick.config.target)
+      updateStatusBar(getNameFromProxyConfig(quickPick.config))
   }
 }
